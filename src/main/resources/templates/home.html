@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista zadań</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+
+<div class="content">
+
+    <h2>Lista zadań do wykonania</h2>
+
+    <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                th:style="${(task.dueDate.isBefore(T(java.time.LocalDate).now())) ? 'background: rgba(255,0,0,0.31)' : '' }"
+                th:each="task: ${tasks}"  >
+            <span th:text="|${task.title} ---- ${task.dueDate}|"></span>
+            <a th:href="|/done?id=${task.id}|" class="badge badge-primary ">Oznacz jako zrobione</a>
+        </button>
+
+    </div>
+
+    <h2 class="mt-4">Dodaj nowe zadanie</h2>
+
+    <form action="/add" method="post" th:object="${newTask}">
+        <div class="form-group">
+            <input type="text" class="form-control" th:field="*{title}" placeholder="Tytuł zadania"/>
+        </div>
+        <div class="form-group">
+            <input type="date" class="form-control" th:field="*{dueDate}" placeholder="Do kiedy"/>
+        </div>
+        <input type="submit" value="Dodaj!" class="btn btn-primary" />
+    </form>
+
+    <h2 class="mt-4">Lista zadań już wykonanych (archiwum)</h2>
+
+    <div class="list-group mt-4">
+        <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                th:each="task: ${tasksDone}"  >
+            <span th:text="${task.title}"></span>
+        </button>
+
+    </div>
+</div>
+
+</body>
+</html>
